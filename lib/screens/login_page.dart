@@ -29,12 +29,11 @@ class LoginPageState extends State<LoginPage> {
       dynamic result = isLogin
           ? await _auth.signIn(email, password)
           : await _auth.signUp(email, password);
-      if (mounted) {  // Check if the widget is still in the tree
-        if (result == null) {
-          setState(() => error = 'Please supply a valid email and password');
-        } else {
-          Navigator.pushReplacementNamed(context, '/home');
-        }
+      if (!mounted) return;
+      if (result == null) {
+        setState(() => error = 'Please supply a valid email and password');
+      } else {
+        Navigator.pushReplacementNamed(context, '/home');
       }
     }
   }
@@ -68,7 +67,6 @@ class LoginPageState extends State<LoginPage> {
               ElevatedButton(
                 onPressed: _submit,
                 child: Text(isLogin ? 'Sign In' : 'Sign Up'),
-
               ),
               const SizedBox(height: 12.0),
               Text(
@@ -78,7 +76,6 @@ class LoginPageState extends State<LoginPage> {
               TextButton(
                 onPressed: _toggleView,
                 child: Text(isLogin ? 'Need an account? Sign Up' : 'Have an account? Sign In'),
-
               ),
             ],
           ),
