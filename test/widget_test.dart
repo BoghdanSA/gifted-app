@@ -21,6 +21,6 @@ void main() {
     expect(find.byType(ElevatedButton), findsOneWidget, reason: 'No ElevatedButton found');
 
     // Print the widget tree for debugging
-    debugPrint(tester.binding.renderViewElement?.toStringDeep());
+    debugPrint(tester.binding.rootElement?.toStringDeep());
   });
 }
