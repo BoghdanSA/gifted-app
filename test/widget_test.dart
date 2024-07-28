@@ -9,15 +9,18 @@ void main() {
     await tester.pumpWidget(const GiftedApp());
 
     // Verify that the app builds without crashing
-    expect(find.byType(MaterialApp), findsOneWidget);
+    expect(find.byType(MaterialApp), findsOneWidget, reason: 'MaterialApp not found');
 
     // Verify that the LoginPage is the first screen
-    expect(find.byType(LoginPage), findsOneWidget);
+    expect(find.byType(LoginPage), findsOneWidget, reason: 'LoginPage not found');
 
     // Verify that there's at least one text form field (for email or password)
-    expect(find.byType(TextFormField), findsAtLeastNWidgets(1));
+    expect(find.byType(TextFormField), findsAtLeastNWidgets(1), reason: 'No TextFormField found');
 
     // Verify that there's a button (it might be for login or sign up)
-    expect(find.byType(ElevatedButton), findsOneWidget);
+    expect(find.byType(ElevatedButton), findsOneWidget, reason: 'No ElevatedButton found');
+
+    // Print the widget tree for debugging
+    debugPrint(tester.binding.renderViewElement?.toStringDeep());
   });
 }
