@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'screens/login_page.dart';
 import 'screens/home_page.dart';
 import 'screens/add_recipient_page.dart';
 import 'screens/recipient_list_page.dart';
 import 'screens/gift_suggestion_page.dart';
+import 'screens/edit_recipient_page.dart';
+import 'screens/gift_ideas_page.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -30,20 +31,34 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const LoginPage(),
-        '/home': (context) => const HomePage(),
+        '/home': (context) => HomePage(),
         '/add_recipient': (context) => const AddRecipientPage(),
-        '/recipient_list': (context) => const RecipientListPage(),
+        '/recipient_list': (context) => RecipientListPage(),
       },
       onGenerateRoute: (settings) {
         if (settings.name == '/gift_suggestion') {
           final args = settings.arguments as Map<String, String>;
           return MaterialPageRoute(
-            builder: (context) {
-              return GiftSuggestionPage(
-                recipientName: args['name']!,
-                relationship: args['relationship']!,
-              );
-            },
+            builder: (context) => GiftSuggestionPage(
+              recipientName: args['name']!,
+              relationship: args['relationship']!,
+            ),
+          );
+        } else if (settings.name == '/edit_recipient') {
+          final args = settings.arguments as Map<String, dynamic>;
+          return MaterialPageRoute(
+            builder: (context) => EditRecipientPage(
+              recipientId: args['id'],
+              recipientData: args['data'],
+            ),
+          );
+        } else if (settings.name == '/gift_ideas') {
+          final args = settings.arguments as Map<String, String>;
+          return MaterialPageRoute(
+            builder: (context) => GiftIdeasPage(
+              recipientId: args['id']!,
+              recipientName: args['name']!,
+            ),
           );
         }
         return null;

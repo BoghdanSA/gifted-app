@@ -1,35 +1,50 @@
 import 'package:flutter/material.dart';
 import '../services/database_service.dart';
 
-class AddRecipientPage extends StatefulWidget {
-  const AddRecipientPage({Key? key}) : super(key: key);
+class EditRecipientPage extends StatefulWidget {
+  final String recipientId;
+  final Map<String, dynamic> recipientData;
+
+  const EditRecipientPage({Key? key, required this.recipientId, required this.recipientData}) : super(key: key);
 
   @override
-  AddRecipientPageState createState() => AddRecipientPageState();
+  EditRecipientPageState createState() => EditRecipientPageState();
 }
 
-class AddRecipientPageState extends State<AddRecipientPage> {
+class EditRecipientPageState extends State<EditRecipientPage> {
   final _formKey = GlobalKey<FormState>();
   final DatabaseService _db = DatabaseService();
-  String name = '';
-  String relationship = '';
-  DateTime? birthday;
+  late String name;
+  late String relationship;
+  late DateTime? birthday;
   bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    name = widget.recipientData['name'];
+    relationship = widget.recipientData['relationship'];
+    birthday = widget.recipientData['birthday']?.toDate();
+  }
 
   Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       setState(() => _isLoading = true);
       try {
-        await _db.addRecipient(name, relationship, birthday);
+        await _db.updateRecipient(widget.recipientId, {
+          'name': name,
+          'relationship': relationship,
+          'birthday': birthday,
+        });
         if (!mounted) return;
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Recipient added successfully')),
+          const SnackBar(content: Text('Recipient updated successfully')),
         );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error adding recipient: $e')),
+          SnackBar(content: Text('Error updating recipient: $e')),
         );
       } finally {
         if (mounted) setState(() => _isLoading = false);
@@ -40,7 +55,7 @@ class AddRecipientPageState extends State<AddRecipientPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Add Gift Recipient')),
+      appBar: AppBar(title: const Text('Edit Gift Recipient')),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
@@ -51,11 +66,13 @@ class AddRecipientPageState extends State<AddRecipientPage> {
                   child: Column(
                     children: [
                       TextFormField(
+                        initialValue: name,
                         decoration: const InputDecoration(labelText: 'Name'),
                         validator: (value) => value!.isEmpty ? 'Please enter a name' : null,
                         onSaved: (value) => name = value!,
                       ),
                       TextFormField(
+                        initialValue: relationship,
                         decoration: const InputDecoration(labelText: 'Relationship'),
                         validator: (value) => value!.isEmpty ? 'Please enter the relationship' : null,
                         onSaved: (value) => relationship = value!,
@@ -79,7 +96,7 @@ class AddRecipientPageState extends State<AddRecipientPage> {
                       const SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: _submitForm,
-                        child: const Text('Add Recipient'),
+                        child: const Text('Update Recipient'),
                       ),
                     ],
                   ),

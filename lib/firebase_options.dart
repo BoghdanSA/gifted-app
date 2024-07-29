@@ -4,23 +4,10 @@ import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
-/// Default [FirebaseOptions] for use with your Firebase apps.
-///
-/// Example:
-/// ```dart
-/// import 'firebase_options.dart';
-/// // ...
-/// await Firebase.initializeApp(
-///   options: DefaultFirebaseOptions.currentPlatform,
-/// );
-/// ```
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -49,6 +36,16 @@ class DefaultFirebaseOptions {
     }
   }
 
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyCGd3W_J2Ao1emhHPF_H5SSY7kGEflh1A4',
+    appId: '1:1050263664788:web:2bf8511f14d86922bc5c81',
+    messagingSenderId: '1050263664788',
+    projectId: 'gifted-11105',
+    authDomain: 'gifted-11105.firebaseapp.com',
+    storageBucket: 'gifted-11105.appspot.com',
+    measurementId: 'G-T8Z6ZYL4HJ',
+  );
+
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyCCLTfiLC1E-b80tJH02yGelk5VF9JmZ4w',
     appId: '1:1050263664788:ios:38276641a41bc563bc5c81',
@@ -67,5 +64,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'gifted-11105.appspot.com',
     measurementId: 'G-T8Z6ZYL4HJ',
   );
-
 }

@@ -1,33 +1,24 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class HomePage extends StatelessWidget {
+  HomePage({Key? key}) : super(key: key);
 
-  @override
-  HomePageState createState() => HomePageState();
-}
-
-class HomePageState extends State<HomePage> {
   final AuthService _auth = AuthService();
-
-  void _handleLogout() async {
-    await _auth.signOut();
-    if (mounted) {
-      Navigator.pushReplacementNamed(context, '/');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Gifted App Home'),
-        actions: <Widget>[
+        actions: [
           TextButton.icon(
             icon: const Icon(Icons.person, color: Colors.white),
             label: const Text('Logout', style: TextStyle(color: Colors.white)),
-            onPressed: _handleLogout,
+            onPressed: () async {
+              await _auth.signOut();
+              Navigator.pushReplacementNamed(context, '/');
+            },
           )
         ],
       ),
@@ -42,6 +33,13 @@ class HomePageState extends State<HomePage> {
                 Navigator.pushNamed(context, '/add_recipient');
               },
               child: const Text('Add Gift Recipient'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/recipient_list');
+              },
+              child: const Text('View Recipients'),
             ),
           ],
         ),
